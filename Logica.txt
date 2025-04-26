@@ -1,0 +1,25 @@
+Pasos para el crear el Back-End
+1. Configuración inicial
+    1.1. Crear nuestro proyecto con Node.js e instalamos las dependencias básicas a usar.
+    1.2. Configurar la conexión de la base de datos.
+    1.3. Crear las carpetas principales
+2. Gestion de Usuarios
+    2.1. Registrar Usuarios
+    2.2. Editar Usuarios
+    2.3. Eliminar Usuarios
+    2.2. Inicio de Sesión
+3. Gestión de productos
+    3.1. Listar productos
+    3.2. Agregar nuevos productos
+    3.3. Editar productos
+    3.4. Eliminar productos
+4. Gestión de ordenes de compra
+    4.1. Crear orden
+    4.2. Editar orden
+    4.3. Eliminar orden
+5. Seguridad
+    5.1. Proteccion de rutas
+6. Manejo de errores
+    6.1. Capturar errores en consultas a base de datos y responder con mensajes claros al cliente
+    6.2. Validar todos los inputs del usuario antes de procesarlos
+    6.3. Devolver códigos HTTP apropiados (ej: 400, 401, 403, 500)
