@@ -1,0 +1,216 @@
+.navbarContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1rem;
+  font-weight: 500;
+  max-width: 75rem;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  background-color: #eee;
+  box-sizing: border-box;
+}
+
+.navbarLogo {
+  /* width: 9rem; */
+  width: 1.5rem;
+}
+
+.menuIcon {
+  display: none;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.navbarLinks {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.navbarLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  color: #4b5563;
+  width: 100%;
+}
+.navbarLink:hover {
+  color: #007bff;
+}
+
+.navbarLink.active {
+  color: #007bff;
+}
+
+.navbarLinkLine {
+  width: 100%;
+  border: none;
+  height: 0.09375rem;
+  background-color: #007bff;
+}
+
+.mobileCloseButton {
+  display: none;
+}
+
+.navbarIcons {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.icon {
+  width: 1.25rem;
+  cursor: pointer;
+}
+
+.profileGroup {
+  position: relative;
+  display: inline-block;
+}
+
+.profileDropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  padding-top: 1rem;
+}
+.profileDropdown.show {
+  display: block;
+}
+
+.profileGroup:hover .profileDropdown {
+  display: block;
+}
+
+.profileMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 9rem;
+  padding: 0.75rem 1.25rem;
+  background-color: #f1f5f9;
+  color: #6b7280;
+  border-radius: 0.5rem;
+}
+
+.profileMenuItem {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.profileMenuItem:hover {
+  color: black;
+}
+
+.cartLink {
+  position: relative;
+}
+
+.cartCount {
+  position: absolute;
+  right: -0.3125rem;
+  bottom: -0.3125rem;
+  width: 1rem;
+  height: 1rem;
+  background-color: black;
+  color: white;
+  font-size: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Vista para celular --- */
+@media (max-width: 768px) {
+  .menuIcon {
+    display: block;
+  }
+
+  .navbarLinks.active + .navbarIcons .menuIcon {
+    display: none;
+  }
+
+  .navbarLinks {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    width: 100%;
+    font-size: 0.875rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    box-shadow: none;
+    z-index: 15;
+    overflow-x: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0s ease-in 0.3s;
+    visibility: hidden;
+  }
+
+  .navbarLinks.active {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .mobileCloseButton {
+    color: black;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    align-self: flex-start;
+    list-style: none;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .navbarLink {
+    align-items: flex-start;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .navbarLink.active {
+    background-color: black;
+    color: white;
+    border-bottom: none;
+  }
+
+  .navbarLink.active .navbarLinkLine {
+    display: none;
+  }
+
+  .navbarLink.active .navbarLinkText {
+    color: white;
+  }
+
+  .navbarLink:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .navbarLinkText {
+    color: black;
+  }
+
+  .navbarLinkLine {
+    background-color: black;
+  }
+}

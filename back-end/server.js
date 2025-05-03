@@ -1,10 +1,14 @@
 const express = require("express");
+const imageRoutes = require("./routes/listImageRoutes");
+const heroImageRoutes = require("./routes/heroImageRoutes");
+const productRoutes = require("./routes/productRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
+const subcategoryRoutes = require("./routes/subcategoryRoutes");
 const mysql = require("mysql");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
-app.use(express.json());
-app.use(cors());
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -13,38 +17,37 @@ const db = mysql.createConnection({
   database: "ecommerce",
 });
 
-//login
-app.post("/login", (req, res) => {
-  const sql = `SELECT u.username, u.password, u.id_role, u.state FROM users u 
-    WHERE username=? AND password=?`;
-  const values = [req.body.user, req.body.password];
-  db.query(sql, values, (err, data) => {
-    if (err) return res.json("Error de conexión");
-    if (data.length > 0) {
-      if (data[0].state === 1) {
-        const userRole = data[0].id_role;
-        const usuario = data[0].username;
-        // const year = new Date().getFullYear();
-        // return res.json("Login Seccessfully");
-        console.log(data[0]);
-        console.log(data[0].username);
-        return res.json({
-          message: "Login Seccessfully",
-          role: userRole,
-          usuario: usuario,
-          // year: year,
-        });
-      } else {
-        return res.json({ message: "Usuario inhabilitado" });
-      }
-    } else {
-      // return res.json("Usuario o Contraseña incorrectos");
-      return res.json({ message: "Usuario o contraseña incorrectos" });
-    }
-  });
+db.connect((err) => {
+  if (err) {
+    console.error("Error al conectar a la base de datos: " + err.stack);
+    return;
+  }
+  console.log("Conexión a la base de datos exitosa con el ID " + db.threadId);
 });
 
-//Conexion
+app.use(cors());
+
+// Middleware para pasar DB
+app.use((req, res, next) => {
+  req.db = db;
+  next();
+});
+
+app.use(express.static(path.join(__dirname, "dbimages")));
+app.use(express.static(path.join(__dirname, "dbheroimages")));
+
+// app.use("/images", express.static(path.join(__dirname, "dbimages")));
+// app.use(
+//   "/hero-images-static",
+//   express.static(path.join(__dirname, "dbheroimages"))
+// );
+
+app.use("/", imageRoutes);
+app.use("/", heroImageRoutes);
+app.use("/api", productRoutes);
+app.use("/api", categoryRoutes);
+app.use("/api", subcategoryRoutes);
+
 app.listen(5000, () => {
-  console.log("Conexion exitosa");
+  console.log("Servidor iniciado en el puerto 5000");
 });

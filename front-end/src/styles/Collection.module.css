@@ -1,0 +1,46 @@
+.collectionContainer {
+  padding: 20px;
+}
+
+.contentContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.filterSidebar {
+  width: 200px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.filterSidebar h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.filterSidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filterSidebar li {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.filterSidebar li input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.productListContainer {
+  flex-grow: 1;
+}
+
+.productList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
