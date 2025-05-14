@@ -75,7 +75,7 @@ function Product() {
     };
     // console.log("Producto a agregar al carrito:", cartItem);
     addToCart(cartItem);
-    navigate("/cart");
+    // navigate("/cart");
   };
 
   if (loading) {

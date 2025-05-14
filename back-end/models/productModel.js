@@ -69,3 +69,56 @@ exports.getRelatedProducts = (db, productId, limit = 4, callback) => {
   `;
   db.query(sql, [productId, limit], callback);
 };
+
+exports.addProduct = (db, newProduct, callback) => {
+  const sql = `
+    INSERT INTO products (name, description, price, sizes, date, bestseller, id_image, id_category, id_subcategory)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  const {
+    name,
+    description,
+    price,
+    sizes,
+    date,
+    bestseller,
+    id_image,
+    id_category,
+    id_subcategory,
+  } = newProduct;
+  db.query(
+    sql,
+    [
+      name,
+      description,
+      price,
+      sizes,
+      date,
+      bestseller,
+      id_image,
+      id_category,
+      id_subcategory,
+    ],
+    callback
+  );
+};
+
+exports.getSizesBySubcategory = (db, idSubcategory, callback) => {
+  const sql = `
+    SELECT size
+    FROM sizes_by_subcategory
+    WHERE id_subcategory = ?
+    ORDER BY size ASC
+  `;
+  console.log("Ejecutando consulta para tallas:", sql, [idSubcategory]);
+  db.query(sql, [idSubcategory], (err, results) => {
+    if (err) {
+      console.error("Error al ejecutar la consulta de tallas:", err);
+      return callback(err, null);
+    }
+    console.log("Resultados de la consulta de tallas:", results);
+    const sizes = results.map((row) => row.size);
+    console.log("Tallas formateadas:", sizes);
+    callback(null, sizes);
+  });
+};

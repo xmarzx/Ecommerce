@@ -130,6 +130,22 @@ function Navbar() {
             </>
           )}
         </NavLink> */}
+        <NavLink
+          to="/addproducts"
+          className={({ isActive }) =>
+            isActive
+              ? `${styles.navbarLink} ${styles.active}`
+              : styles.navbarLink
+          }
+          onClick={closeMenu}
+        >
+          {({ isActive }) => (
+            <>
+              <p className={styles.navbarLinkText}>ADD PRODUCT</p>
+              {isActive && <hr className={styles.navbarLinkLine} />}
+            </>
+          )}
+        </NavLink>
       </ul>
       <div className={styles.navbarIcons}>
         <img src={assets.search_icon} className={styles.icon} alt="Search" />

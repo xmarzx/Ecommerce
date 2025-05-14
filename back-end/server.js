@@ -1,5 +1,5 @@
 const express = require("express");
-const imageRoutes = require("./routes/listImageRoutes");
+const imageRoutes = require("./routes/imageRoutes");
 const heroImageRoutes = require("./routes/heroImageRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");

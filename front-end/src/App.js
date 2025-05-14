@@ -14,6 +14,7 @@ import Navbar from "./components/Navbar";
 import ListImages from "./routes/ListImages";
 import ListHeroImages from "./routes/ListHeroImages";
 import { CartProvider } from "./context/CartContext";
+import AddProductForm from "./routes/AddProductForm";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/place-order" element={<PlaceOrder />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/addproducts" element={<AddProductForm />} />
         </Routes>
       </BrowserRouter>
     </CartProvider>
