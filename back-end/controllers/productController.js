@@ -99,9 +99,9 @@ exports.getProductById = (req, res) => {
 
 exports.getRelatedProducts = (req, res) => {
   const productId = req.params.productId;
-  console.log(
-    `Solicitud para obtener productos relacionados con el ID: ${productId}`
-  );
+  // console.log(
+  //   `Solicitud para obtener productos relacionados con el ID: ${productId}`
+  // );
   ProductModel.getRelatedProducts(
     req.db,
     productId,
@@ -116,10 +116,10 @@ exports.getRelatedProducts = (req, res) => {
           .status(500)
           .json({ error: "Error al obtener productos relacionados" });
       }
-      console.log(
-        `Productos relacionados con el ID ${productId} obtenidos exitosamente:`,
-        relatedProducts
-      );
+      // console.log(
+      //   `Productos relacionados con el ID ${productId} obtenidos exitosamente:`,
+      //   relatedProducts
+      // );
       res.json(relatedProducts);
     }
   );

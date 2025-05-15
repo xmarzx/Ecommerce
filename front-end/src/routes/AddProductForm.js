@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import styles from "../styles/AddProductForm.module.css"; // Importa tus estilos CSS
+import styles from "../styles/AddProductForm.module.css";
 
 const AddProductForm = () => {
-  // Estado para los campos del formulario
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -18,9 +17,8 @@ const AddProductForm = () => {
   const [loading, setLoading] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [isSubcategoryDisabled, setIsSubcategoryDisabled] = useState(true);
-  const [uploadedImageId, setUploadedImageId] = useState(null); // Nuevo
+  const [uploadedImageId, setUploadedImageId] = useState(null);
 
-  // Efecto para cargar categorías y subcategorías desde la API
   useEffect(() => {
     const fetchCategoriesAndSubcategories = async () => {
       try {
@@ -58,7 +56,6 @@ const AddProductForm = () => {
     fetchCategoriesAndSubcategories();
   }, []);
 
-  // Efecto para habilitar/deshabilitar subcategorías
   useEffect(() => {
     setIsSubcategoryDisabled(!categoryId);
     if (!categoryId) {
@@ -66,7 +63,6 @@ const AddProductForm = () => {
     }
   }, [categoryId]);
 
-  // Función para manejar el cambio en el campo de tallas
   const handleSizeChange = (size) => {
     setSizes((prevSizes) =>
       prevSizes.includes(size)
@@ -75,7 +71,6 @@ const AddProductForm = () => {
     );
   };
 
-  // Función para manejar el cambio en los campos del formulario
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
 
@@ -83,11 +78,10 @@ const AddProductForm = () => {
       setBestseller(checked);
     } else if (type === "file") {
       if (files && files.length <= 4) {
-        // Límite de 4 archivos
         const filesArray = Array.from(files);
         setImages(filesArray);
       } else if (files && files.length > 4) {
-        e.target.value = ""; // Limpiar el input
+        e.target.value = "";
         toast.error("Máximo 4 imágenes permitidas.");
         setFormErrors((prevErrors) => ({
           ...prevErrors,
@@ -108,7 +102,7 @@ const AddProductForm = () => {
     } else {
       if (name === "categoryId") {
         setCategoryId(value);
-        setSubcategoryId(""); // Reset subcategory when category changes.
+        setSubcategoryId("");
       } else if (name === "subcategoryId") {
         setSubcategoryId(value);
       } else {
@@ -123,7 +117,6 @@ const AddProductForm = () => {
     setLoading(true);
     setFormErrors({});
 
-    // Validaciones (se mantienen igual)
     const errors = {};
     if (!name.trim()) errors.name = "El nombre es requerido";
     if (!description.trim()) errors.description = "La descripción es requerida";
@@ -143,7 +136,7 @@ const AddProductForm = () => {
     if (!images || images.length === 0)
       errors.images = "La imagen es requerida";
     else if (images.length > 1)
-      errors.images = "Solo se permite una imagen para el producto."; // Modificado
+      errors.images = "Solo se permite una imagen para el producto.";
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -161,10 +154,10 @@ const AddProductForm = () => {
       formData.append("category_id", categoryId);
       formData.append("subcategory_id", subcategoryId);
       formData.append("bestseller", bestseller ? 1 : 0);
-      sizes.forEach((size) => formData.append("sizes", size)); // Enviar tallas como array
+      sizes.forEach((size) => formData.append("sizes", size));
       formData.append("date", date);
       if (images && images.length > 0) {
-        formData.append("image", images[0]); // Append la imagen
+        formData.append("image", images[0]);
       } else {
         setFormErrors((prevErrors) => ({
           ...prevErrors,
@@ -195,7 +188,6 @@ const AddProductForm = () => {
       const responseData = await productResponse.json();
       console.log("Datos de respuesta del producto:", responseData);
 
-      // Reset form (se mantiene igual)
       setName("");
       setDescription("");
       setPrice("");
@@ -360,7 +352,7 @@ const AddProductForm = () => {
             </option>
             {subcategories &&
               subcategories
-                .filter((sub) => sub.id_category === parseInt(categoryId, 10)) // Compare as numbers
+                .filter((sub) => sub.id_category === parseInt(categoryId, 10))
                 .map((subcategory) => (
                   <option
                     key={subcategory.id_subcategory}
@@ -384,10 +376,10 @@ const AddProductForm = () => {
             {["XS", "S", "M", "L", "XL"].map((size) => (
               <button
                 key={size}
-                type="button" // Importante: mantener type="button"
+                type="button"
                 onClick={() => handleSizeChange(size)}
                 className={`${styles.sizeButton} ${
-                  sizes.includes(size) ? styles.selected : "" // Aplica la clase 'selected'
+                  sizes.includes(size) ? styles.selected : ""
                 }`}
                 disabled={loading}
               >
@@ -407,14 +399,14 @@ const AddProductForm = () => {
           </label>
           <input
             type="file"
-            name="image" // Cambiado a "image" para coincidir con multer.single()
+            name="image"
             onChange={handleInputChange}
             className={`${styles.formInput} ${
               formErrors.images ? styles.inputError : ""
             }`}
             disabled={loading}
             accept="image/*"
-            multiple={false} // Solo una imagen para el producto aquí
+            multiple={false}
           />
           {formErrors.images && (
             <p className={styles.errorText}>{formErrors.images}</p>
