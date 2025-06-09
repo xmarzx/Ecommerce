@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
+// Importa tu instancia de Axios configurada
+import axios from "../utils/axiosConfig";
 import styles from "../styles/AddProductForm.module.css";
 
 const AddProductForm = () => {
@@ -18,33 +20,17 @@ const AddProductForm = () => {
   const [formErrors, setFormErrors] = useState({});
   const [isSubcategoryDisabled, setIsSubcategoryDisabled] = useState(true);
   const [uploadedImageId, setUploadedImageId] = useState(null);
+  const [availableSizesForSubcategory, setAvailableSizesForSubcategory] =
+    useState([]);
 
   useEffect(() => {
     const fetchCategoriesAndSubcategories = async () => {
       try {
-        const apiUrl = `http://${window.location.hostname}:5000`;
+        const categoriesResponse = await axios.get("/categories");
+        setCategories(categoriesResponse.data);
 
-        // Fetch de categorías
-        const categoriesResponse = await fetch(`${apiUrl}/api/categories`);
-        if (!categoriesResponse.ok) {
-          throw new Error(
-            `Failed to fetch categories: ${categoriesResponse.status}`
-          );
-        }
-        const categoriesData = await categoriesResponse.json();
-        setCategories(categoriesData);
-
-        // Fetch de subcategorías
-        const subcategoriesResponse = await fetch(
-          `${apiUrl}/api/subcategories`
-        );
-        if (!subcategoriesResponse.ok) {
-          throw new Error(
-            `Failed to fetch subcategories: ${subcategoriesResponse.status}`
-          );
-        }
-        const subcategoriesData = await subcategoriesResponse.json();
-        setSubcategories(subcategoriesData);
+        const subcategoriesResponse = await axios.get("/subcategories");
+        setSubcategories(subcategoriesResponse.data);
       } catch (error) {
         console.error("Error fetching categories and subcategories:", error);
         toast.error(
@@ -60,8 +46,33 @@ const AddProductForm = () => {
     setIsSubcategoryDisabled(!categoryId);
     if (!categoryId) {
       setSubcategoryId("");
+      setAvailableSizesForSubcategory([]);
+      setSizes([]);
     }
   }, [categoryId]);
+
+  useEffect(() => {
+    if (subcategoryId) {
+      const selectedSubcategory = subcategories.find(
+        (sub) => sub.id_subcategory === parseInt(subcategoryId, 10)
+      );
+      if (selectedSubcategory && selectedSubcategory.available_sizes) {
+        try {
+          const parsedSizes = JSON.parse(selectedSubcategory.available_sizes);
+          setAvailableSizesForSubcategory(parsedSizes);
+        } catch (e) {
+          console.error("Error parsing available_sizes from subcategory:", e);
+          setAvailableSizesForSubcategory([]);
+        }
+      } else {
+        setAvailableSizesForSubcategory([]);
+      }
+      setSizes([]);
+    } else {
+      setAvailableSizesForSubcategory([]);
+      setSizes([]);
+    }
+  }, [subcategoryId, subcategories]);
 
   const handleSizeChange = (size) => {
     setSizes((prevSizes) =>
@@ -92,9 +103,6 @@ const AddProductForm = () => {
       }
     } else if (name === "price") {
       setPrice(value);
-      // } else if (name === "price") {
-      //   const numValue = Number(value);
-      //   setPrice(isNaN(numValue) ? value : numValue);
     } else if (name === "date") {
       setDate(value);
     } else if (name === "description") {
@@ -111,7 +119,6 @@ const AddProductForm = () => {
     }
   };
 
-  // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -125,8 +132,6 @@ const AddProductForm = () => {
     } else if (!/^\d+(\.\d{1,2})?$/.test(price)) {
       errors.price = "El precio debe ser un número válido (ej: 19.99)";
     }
-    // if (!price || isNaN(Number(price)))
-    //   errors.price = "El precio debe ser un número válido";
     if (sizes.length === 0)
       errors.sizes = "Debe seleccionar al menos una talla";
     if (!date) errors.date = "La fecha es requerida";
@@ -145,7 +150,6 @@ const AddProductForm = () => {
     }
 
     try {
-      const apiUrl = `http://${window.location.hostname}:5000/api`;
       const formData = new FormData();
 
       formData.append("name", name);
@@ -153,8 +157,8 @@ const AddProductForm = () => {
       formData.append("price", price);
       formData.append("category_id", categoryId);
       formData.append("subcategory_id", subcategoryId);
-      formData.append("bestseller", bestseller ? 1 : 0);
-      sizes.forEach((size) => formData.append("sizes", size));
+      formData.append("bestseller", bestseller ? "1" : "0");
+      sizes.forEach((size) => formData.append("sizes[]", size));
       formData.append("date", date);
       if (images && images.length > 0) {
         formData.append("image", images[0]);
@@ -172,20 +176,10 @@ const AddProductForm = () => {
         Object.fromEntries(formData.entries())
       );
 
-      const productResponse = await fetch(`${apiUrl}/products`, {
-        method: "POST",
-        body: formData,
-      });
+      const productResponse = await axios.post("/products", formData);
 
       console.log("Respuesta de la creación del producto:", productResponse);
-
-      if (!productResponse.ok) {
-        const errorData = await productResponse.json();
-        console.error("Error al agregar producto:", errorData);
-        throw new Error(errorData.message || "Error al agregar producto");
-      }
-
-      const responseData = await productResponse.json();
+      const responseData = productResponse.data;
       console.log("Datos de respuesta del producto:", responseData);
 
       setName("");
@@ -199,12 +193,22 @@ const AddProductForm = () => {
       setBestseller(false);
       setFormErrors({});
       setUploadedImageId(null);
+      setAvailableSizesForSubcategory([]);
 
       toast.success("Producto agregado exitosamente");
     } catch (error) {
       console.error("Error al agregar producto:", error);
-      setFormErrors({ server: error.message });
-      toast.error("Error al agregar producto");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setFormErrors({ server: error.response.data.message });
+        toast.error(error.response.data.message);
+      } else {
+        setFormErrors({ server: error.message });
+        toast.error("Error al agregar producto");
+      }
     } finally {
       setLoading(false);
     }
@@ -373,19 +377,25 @@ const AddProductForm = () => {
             Tallas <span className={styles.required}>*</span>
           </label>
           <div className={styles.sizeButtons}>
-            {["XS", "S", "M", "L", "XL"].map((size) => (
-              <button
-                key={size}
-                type="button"
-                onClick={() => handleSizeChange(size)}
-                className={`${styles.sizeButton} ${
-                  sizes.includes(size) ? styles.selected : ""
-                }`}
-                disabled={loading}
-              >
-                {size}
-              </button>
-            ))}
+            {availableSizesForSubcategory.length > 0 ? (
+              availableSizesForSubcategory.map((size) => (
+                <button
+                  key={size}
+                  type="button"
+                  onClick={() => handleSizeChange(size)}
+                  className={`${styles.sizeButton} ${
+                    sizes.includes(size) ? styles.selected : ""
+                  }`}
+                  disabled={loading || !subcategoryId}
+                >
+                  {size}
+                </button>
+              ))
+            ) : (
+              <p className={styles.noSizesMessage}>
+                Seleccione una subcategoría para ver las tallas disponibles.
+              </p>
+            )}
           </div>
           {formErrors.sizes && (
             <p className={styles.errorText}>{formErrors.sizes}</p>

@@ -4,6 +4,7 @@ import axios from "axios";
 import styles from "../styles/Product.module.css";
 import ProductCard from "../components/ProductCard";
 import { CartContext } from "../context/CartContext";
+import toast from "react-hot-toast";
 
 function Product() {
   const { productId } = useParams();
@@ -25,7 +26,11 @@ function Product() {
           `${API_URL}/api/products/${productId}`
         );
         setProduct(response.data);
-        setSelectedSize(null);
+        if (response.data.sizes && response.data.sizes.length > 0) {
+          setSelectedSize(null);
+        } else {
+          setSelectedSize(null);
+        }
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -46,7 +51,7 @@ function Product() {
 
     fetchProductDetails();
     fetchRelatedProducts();
-  }, [productId]);
+  }, [productId, API_URL]);
 
   const handleSizeChange = (event) => {
     setSelectedSize(event.target.value);
@@ -61,10 +66,19 @@ function Product() {
 
   const handleAddToCart = () => {
     if (!product) return;
-    if (product.sizes && product.sizes.length > 0 && !selectedSize) {
-      alert("Por favor, selecciona una talla.");
+
+    if (
+      product.sizes &&
+      Array.isArray(product.sizes) &&
+      product.sizes.length > 0 &&
+      !selectedSize
+    ) {
+      toast.error(
+        "Por favor, selecciona una talla antes de agregar al carrito."
+      );
       return;
     }
+
     const cartItem = {
       id: product.id,
       name: product.name,
@@ -73,9 +87,14 @@ function Product() {
       quantity: quantity,
       image: product.image,
     };
-    // console.log("Producto a agregar al carrito:", cartItem);
+
     addToCart(cartItem);
-    // navigate("/cart");
+    toast.success(
+      `${quantity} ${product.name} ${
+        selectedSize ? `(Talla: ${selectedSize})` : ""
+      } agregado(s) al carrito!`
+    );
+    // setTimeout(() => navigate("/cart"), 1000);
   };
 
   if (loading) {
@@ -98,7 +117,8 @@ function Product() {
         </div>
         <div className={styles.productInfo}>
           <h1 className={styles.productName}>{product.name}</h1>
-          <p className={styles.productPrice}>${product.price}</p>
+          <p className={styles.productPrice}>${product.price.toFixed(2)}</p>
+
           <p className={styles.productDescription}>{product.description}</p>
 
           {product.sizes &&
@@ -107,21 +127,21 @@ function Product() {
               <div className={styles.sizes}>
                 <label>Talla:</label>
                 <div className={styles.sizeOptions}>
-                  {product.sizes.map((size) => (
-                    <div
-                      key={size}
-                      className={`${styles.sizeOption} ${
-                        selectedSize === size ? styles.selected : ""
-                      }`}
-                      onClick={() => setSelectedSize(size)}
-                    >
-                      {size}
-                    </div>
-                  ))}
+                  {Array.isArray(product.sizes) &&
+                    product.sizes.map((size) => (
+                      <div
+                        key={size}
+                        className={`${styles.sizeOption} ${
+                          selectedSize === size ? styles.selected : ""
+                        }`}
+                        onClick={() => setSelectedSize(size)}
+                      >
+                        {size}
+                      </div>
+                    ))}
                 </div>
               </div>
             )}
-
           <div className={styles.quantity}>
             <label>Cantidad:</label>
             <input
@@ -131,7 +151,6 @@ function Product() {
               onChange={handleQuantityChange}
             />
           </div>
-
           <button className={styles.addToCartButton} onClick={handleAddToCart}>
             Agregar al carrito
           </button>

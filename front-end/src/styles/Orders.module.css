@@ -1,0 +1,175 @@
+.ordersContainer {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.ordersContainer h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  font-size: 2.2em;
+  font-weight: 600;
+}
+
+.loading,
+.error,
+.noOrders,
+.message {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.1em;
+  color: #555;
+}
+
+.error {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.noOrders {
+  color: #7f8c8d;
+}
+
+.message {
+  color: #3498db;
+}
+
+.ordersList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.orderItem {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.orderItem:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.orderHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  font-size: 1em;
+  color: #555;
+}
+
+.orderHeader span {
+  flex-shrink: 0;
+}
+
+.orderHeader span:first-child {
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 1.1em;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+.pending {
+  background-color: #f39c12;
+}
+.paid {
+  background-color: #2ecc71;
+}
+.shipped {
+  background-color: #3498db;
+}
+.delivered {
+  background-color: #27ae60;
+}
+.cancelled {
+  background-color: #e74c3c;
+}
+
+.userName {
+  color: #34495e;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.orderDetailsLink {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.orderDetailsLink a {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.95em;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.orderDetailsLink a:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .ordersContainer {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .orderItem {
+    padding: 15px;
+  }
+
+  .orderHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .orderHeader span {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 5px;
+  }
+
+  .userName {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+
+  .orderDetailsLink {
+    text-align: left;
+    width: 100%;
+  }
+
+  .orderDetailsLink a {
+    width: 100%;
+    text-align: center;
+  }
+}

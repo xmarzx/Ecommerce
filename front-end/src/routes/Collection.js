@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../utils/axiosConfig";
 import ProductCard from "../components/ProductCard";
 import styles from "../styles/Collection.module.css";
 
@@ -8,30 +8,22 @@ function Collection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [subCategoriesByCategory, setSubCategoriesByCategory] = useState({});
+  const [allSubCategories, setAllSubCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
-  const API_URL = `http://${window.location.hostname}:5000`;
 
   useEffect(() => {
     const fetchInitialData = async () => {
       setLoading(true);
       try {
-        const productsResponse = await axios.get(`${API_URL}/api/products`);
-
+        const productsResponse = await axios.get("/products");
         setProducts(productsResponse.data);
 
-        const categoriesResponse = await axios.get(`${API_URL}/api/categories`);
+        const categoriesResponse = await axios.get("/categories");
         setCategories(categoriesResponse.data);
 
-        const subcategoriesMap = {};
-        for (const category of categoriesResponse.data) {
-          const subcategoriesResponse = await axios.get(
-            `${API_URL}/api/subcategories/by-category?categoryId=${category.id_category}`
-          );
-          subcategoriesMap[category.id_category] = subcategoriesResponse.data;
-        }
-        setSubCategoriesByCategory(subcategoriesMap);
+        const subcategoriesResponse = await axios.get("/subcategories");
+        setAllSubCategories(subcategoriesResponse.data);
 
         setLoading(false);
       } catch (error) {
@@ -45,22 +37,29 @@ function Collection() {
 
   const handleCategoryCheckboxChange = (event) => {
     const categoryId = parseInt(event.target.value);
-    if (event.target.checked) {
-      setSelectedCategories([...selectedCategories, categoryId]);
-    } else {
-      setSelectedCategories(
-        selectedCategories.filter((id) => id !== categoryId)
-      );
+    let newSelectedCategories;
 
-      setSelectedSubCategories(
-        selectedSubCategories.filter((subId) => {
-          const subcategory = Object.values(subCategoriesByCategory)
-            .flat()
-            .find((sub) => sub.id_subcategory === subId);
-          return subcategory && subcategory.id_category !== categoryId;
-        })
+    if (event.target.checked) {
+      newSelectedCategories = [...selectedCategories, categoryId];
+    } else {
+      newSelectedCategories = selectedCategories.filter(
+        (id) => id !== categoryId
       );
     }
+    setSelectedCategories(newSelectedCategories);
+
+    setSelectedSubCategories((prevSelectedSubCategories) => {
+      const relevantSubcategories = allSubCategories.filter((sub) =>
+        newSelectedCategories.includes(sub.id_category)
+      );
+      const relevantSubcategoryIds = new Set(
+        relevantSubcategories.map((sub) => sub.id_subcategory)
+      );
+
+      return prevSelectedSubCategories.filter((subId) =>
+        relevantSubcategoryIds.has(subId)
+      );
+    });
   };
 
   const handleSubCategoryCheckboxChange = (event) => {
@@ -73,6 +72,10 @@ function Collection() {
       );
     }
   };
+
+  const subCategoriesToDisplay = allSubCategories.filter((sub) =>
+    selectedCategories.includes(sub.id_category)
+  );
 
   const filteredProducts = products.filter((product) => {
     const categoryMatch =
@@ -112,24 +115,26 @@ function Collection() {
             ))}
           </ul>
 
-          <h3>Subcategorías</h3>
-          <ul>
-            {Object.values(subCategoriesByCategory)
-              .flat()
-              .map((subcategory) => (
-                <li key={subcategory.id_subcategory}>
-                  <input
-                    type="checkbox"
-                    value={subcategory.id_subcategory}
-                    checked={selectedSubCategories.includes(
-                      subcategory.id_subcategory
-                    )}
-                    onChange={handleSubCategoryCheckboxChange}
-                  />
-                  <label>{subcategory.name}</label>
-                </li>
-              ))}
-          </ul>
+          {selectedCategories.length > 0 && (
+            <>
+              <h3>Subcategorías</h3>
+              <ul>
+                {subCategoriesToDisplay.map((subcategory) => (
+                  <li key={subcategory.id_subcategory}>
+                    <input
+                      type="checkbox"
+                      value={subcategory.id_subcategory}
+                      checked={selectedSubCategories.includes(
+                        subcategory.id_subcategory
+                      )}
+                      onChange={handleSubCategoryCheckboxChange}
+                    />
+                    <label>{subcategory.name}</label>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
         <div className={styles.productListContainer}>
           <div className={styles.productList}>

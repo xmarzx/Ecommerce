@@ -1,77 +1,190 @@
+.navbar {
+  --gradient-primary: linear-gradient(135deg, #2944b8 0%, #6423a5 100%);
+  --gradient-secondary: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  --text-color: #fff;
+  --text-dark: #2d3748;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: var(--gradient-primary);
+  height: 85px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.navbar.scrolled {
+  height: 70px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+.navbar.menuOpen {
+  background: var(--gradient-secondary);
+}
+
 .navbarContainer {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 1rem;
-  font-weight: 500;
-  max-width: 75rem;
-  margin: 0 auto;
+  align-items: center;
+  height: 100%;
   width: 100%;
+  max-width: 1400px;
+  padding: 0 2rem;
   position: relative;
-  background-color: #eee;
-  box-sizing: border-box;
 }
 
 .navbarLogo {
-  /* width: 9rem; */
-  width: 1.5rem;
-}
-
-.menuIcon {
-  display: none;
-  cursor: pointer;
-  z-index: 20;
-}
-
-.navbarLinks {
   display: flex;
-  gap: 1rem;
-  font-size: 0.875rem;
-  color: #4b5563;
+  align-items: center;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  letter-spacing: -0.5px;
+  user-select: none;
+  cursor: default;
+}
+
+.logoHighlight {
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-left: 4px;
+}
+
+.navbarMenu {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.navbarItem {
+  position: relative;
 }
 
 .navbarLink {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  color: #4b5563;
-  width: 100%;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  transition: var(--transition);
+  padding: 0.5rem 0;
+  position: relative;
 }
+
 .navbarLink:hover {
-  color: #007bff;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
 .navbarLink.active {
-  color: #007bff;
+  color: #fff;
+  font-weight: 600;
 }
 
-.navbarLinkLine {
+.navbarLink.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  border: none;
-  height: 0.09375rem;
-  background-color: #007bff;
+  height: 2px;
+  background-color: #fff;
+  transform: scaleX(1);
+  transition: var(--transition);
 }
 
-.mobileCloseButton {
-  display: none;
-}
-
-.navbarIcons {
+.navbarActions {
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
+.navbarSearch {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  padding: 0.3rem 0.3rem 0.3rem 1rem;
+  backdrop-filter: blur(5px);
+  transition: var(--transition);
+}
+
+.navbarSearch:focus-within {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 0.9rem;
+  width: 150px;
+  transition: var(--transition);
+  padding: 0.3rem 0;
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.searchBtn {
+  background: #fff;
+  color: #764ba2;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.searchBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para el botón de hamburguesa */
+
+.navbarToggle {
+  display: none;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  z-index: 1002;
+}
+
+.bar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  transition: var(--transition);
+}
+
+/* Estilos para el botón de cerrar */
 .icon {
   width: 1.25rem;
+  height: 1.25rem;
   cursor: pointer;
+  color: #fff;
 }
 
 .profileGroup {
   position: relative;
-  display: inline-block;
 }
 
 .profileDropdown {
@@ -79,12 +192,10 @@
   position: absolute;
   right: 0;
   padding-top: 1rem;
-}
-.profileDropdown.show {
-  display: block;
+  z-index: 1001;
 }
 
-.profileGroup:hover .profileDropdown {
+.profileDropdown.show {
   display: block;
 }
 
@@ -97,6 +208,7 @@
   background-color: #f1f5f9;
   color: #6b7280;
   border-radius: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .profileMenuItem {
@@ -127,90 +239,170 @@
   justify-content: center;
 }
 
-/* --- Vista para celular --- */
-@media (max-width: 768px) {
-  .menuIcon {
-    display: block;
+.mobileMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  transition: background-color 0.3s ease-in-out;
+}
+
+@media screen and (max-width: 1200px) {
+  .navbarContainer {
+    padding: 0 1.5rem;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .navbarMenu {
+    gap: 1.5rem;
   }
 
-  .navbarLinks.active + .navbarIcons .menuIcon {
+  .navbarActions {
+    gap: 1rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    height: 75px;
+  }
+
+  .navbar.menuOpen {
+    background: var(--gradient-secondary);
+  }
+
+  .navbarToggle {
+    display: flex;
+    order: 1;
+    margin-right: 1.5rem;
+    margin-left: 0;
+    z-index: 1002;
+  }
+
+  .navbar.menuOpen .navbarToggle {
     display: none;
   }
 
-  .navbarLinks {
+  .navbarMenu {
     position: fixed;
     top: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #fff;
-    width: 100%;
-    font-size: 0.875rem;
+    left: -100%;
+    width: 80%;
+    height: 100vh;
+    background: var(--gradient-secondary);
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    box-shadow: none;
-    z-index: 15;
-    overflow-x: hidden;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out, visibility 0s ease-in 0.3s;
-    visibility: hidden;
+    align-items: center;
+    padding: 2rem 0;
+    gap: 1.5rem;
+    transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
   }
 
-  .navbarLinks.active {
-    display: flex;
-    opacity: 1;
-    visibility: visible;
-    transition-delay: 0s;
+  .navbarMenu.active {
+    left: 0;
+    z-index: 1001;
   }
 
-  .mobileCloseButton {
-    color: black;
-    padding: 0.5rem 1rem;
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-    border-radius: 0.25rem;
-    align-self: flex-start;
-    list-style: none;
+  .navbarItem {
     width: 100%;
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
+    text-align: center;
   }
 
   .navbarLink {
-    align-items: flex-start;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    margin-bottom: 0.5rem;
-    width: 100%;
-    box-sizing: border-box;
-    transition: background-color 0.3s ease;
-    -webkit-tap-highlight-color: transparent;
+    display: block;
+    padding: 1rem 0;
+    font-size: 1.1rem;
   }
 
-  .navbarLink.active {
-    background-color: black;
-    color: white;
-    border-bottom: none;
+  .navbarLink.active::after {
+    width: 50%;
+    left: 25%;
   }
 
-  .navbarLink.active .navbarLinkLine {
-    display: none;
+  .navbarLogo {
+    order: 2;
+    flex-grow: 1;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .navbarLink.active .navbarLinkText {
-    color: white;
+  .navbarActions {
+    order: 3;
+    gap: 0.8rem;
+    margin-left: auto;
+    z-index: 1000;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .navbarLogo {
+    font-size: 1.3rem;
   }
 
-  .navbarLink:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
+  .navbarActions {
+    gap: 0.6rem;
   }
 
-  .navbarLinkText {
-    color: black;
+  .navbarSearch {
+    width: 120px;
   }
 
-  .navbarLinkLine {
-    background-color: black;
+  .searchInput {
+    width: 80px;
+    font-size: 0.75rem;
+  }
+
+  .searchBtn {
+    width: 24px;
+    height: 24px;
+  }
+
+  .icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .cartCount {
+    width: 0.8rem;
+    height: 0.8rem;
+    font-size: 0.4rem;
+  }
+
+  .navbarMenu {
+    width: 90%;
+  }
+
+  .navbarContainer {
+    padding: 0 1rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .navbarContainer {
+    padding: 0 0.8rem;
+  }
+
+  .navbarToggle {
+    margin-right: 0.8rem;
+  }
+
+  .navbarSearch {
+    width: 100px;
+  }
+
+  .searchInput {
+    width: 70px;
+    font-size: 0.7rem;
+  }
+
+  .navbarActions {
+    gap: 0.5rem;
   }
 }

@@ -4,6 +4,11 @@ const productController = require("../controllers/productController");
 const multer = require("multer");
 const path = require("path");
 
+const {
+  authenticateToken,
+  authorizeRoles,
+} = require("../middleware/authMiddleware");
+
 const storage = multer.diskStorage({
   destination: path.join(__dirname, "../temp_uploads"),
   filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
@@ -19,9 +24,14 @@ router.get(
   "/products/related/:productId",
   productController.getRelatedProducts
 );
-
-router.post("/products", upload, productController.addProduct);
-
 router.get("/sizes/:idSubcategory", productController.getSizesForSubcategory);
+
+router.post(
+  "/products",
+  authenticateToken,
+  authorizeRoles("admin"),
+  upload,
+  productController.addProduct
+);
 
 module.exports = router;

@@ -4,6 +4,8 @@ const heroImageRoutes = require("./routes/heroImageRoutes");
 const productRoutes = require("./routes/productRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const subcategoryRoutes = require("./routes/subcategoryRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const authRoutes = require("./routes/authRoutes");
 const mysql = require("mysql");
 const cors = require("cors");
 const path = require("path");
@@ -27,7 +29,9 @@ db.connect((err) => {
 
 app.use(cors());
 
-// Middleware para pasar DB
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
   req.db = db;
   next();
@@ -36,17 +40,13 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, "dbimages")));
 app.use(express.static(path.join(__dirname, "dbheroimages")));
 
-// app.use("/images", express.static(path.join(__dirname, "dbimages")));
-// app.use(
-//   "/hero-images-static",
-//   express.static(path.join(__dirname, "dbheroimages"))
-// );
-
 app.use("/", imageRoutes);
 app.use("/", heroImageRoutes);
 app.use("/api", productRoutes);
 app.use("/api", categoryRoutes);
 app.use("/api", subcategoryRoutes);
+app.use("/api", orderRoutes);
+app.use("/api", authRoutes);
 
 app.listen(5000, () => {
   console.log("Servidor iniciado en el puerto 5000");

@@ -151,7 +151,7 @@ exports.addProduct = (req, res) => {
   const type = req.file.mimetype;
   const imageName = req.file.originalname;
   const extension = path.extname(imageName).toLowerCase();
-  const imageData = fs.readFileSync(req.file.path); // Leer desde la carpeta temporal
+  const imageData = fs.readFileSync(req.file.path);
 
   console.log("Información de la imagen recibida:", {
     type,
@@ -166,7 +166,7 @@ exports.addProduct = (req, res) => {
     (err, imageResult) => {
       if (err) {
         console.error("Error al guardar la imagen en la base de datos:", err);
-        fs.unlinkSync(req.file.path); // Eliminar archivo temporal en caso de error
+        fs.unlinkSync(req.file.path);
         return res.status(500).json({
           error: "Error al guardar la imagen del producto en la base de datos.",
         });
@@ -175,7 +175,7 @@ exports.addProduct = (req, res) => {
       const id_image = imageResult.insertId;
       const sizesString = Array.isArray(sizes)
         ? JSON.stringify(sizes)
-        : JSON.stringify([sizes]); // Asegurar que sizes sea un array JSON
+        : JSON.stringify([sizes]);
 
       const newProduct = {
         name,
@@ -196,7 +196,7 @@ exports.addProduct = (req, res) => {
           fs.renameSync(
             req.file.path,
             path.join(__dirname, "../dbimages/", `${id_image}${extension}`)
-          ); // Mover imagen a dbimages
+          );
           console.log(`Imagen movida a dbimages/${id_image}${extension}`);
         } else {
           console.warn(
@@ -206,7 +206,6 @@ exports.addProduct = (req, res) => {
 
         if (err) {
           console.error("Error al guardar los detalles del producto:", err);
-          // Considerar eliminar la imagen guardada en caso de fallo al guardar el producto
           return res
             .status(500)
             .json({ error: "Error al guardar los detalles del producto." });
