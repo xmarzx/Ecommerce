@@ -1,5 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
+// import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { toast } from "react-hot-toast";
 
 const AuthContext = createContext();
@@ -17,14 +19,22 @@ const AuthProvider = ({ children }) => {
 
     if (storedToken && storedUser) {
       try {
-        const parsedUser = JSON.parse(storedUser);
-        setToken(storedToken);
-        setUser(parsedUser);
-      } catch (e) {
-        console.error("Error al parsear usuario del localStorage:", e);
-        localStorage.clear();
+        // const decoded = jwt_decode(storedToken);
+        const decoded = jwtDecode(storedToken);
+        const isExpired = decoded.exp * 1000 < Date.now();
+
+        if (isExpired) {
+          logout();
+        } else {
+          setToken(storedToken);
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (error) {
+        console.error("Token inválido o malformado:", error);
+        logout();
       }
     }
+
     setLoading(false);
   }, []);
 
@@ -34,14 +44,16 @@ const AuthProvider = ({ children }) => {
         email,
         password,
       });
-      const { token, userId, userName, userRole } = response.data;
 
+      const { token, userId, userName, userRole } = response.data;
       const userData = { id: userId, name: userName, email, role: userRole };
+
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(userData));
 
       setToken(token);
       setUser(userData);
+
       toast.success("¡Inicio de sesión exitoso!");
       return true;
     } catch (error) {

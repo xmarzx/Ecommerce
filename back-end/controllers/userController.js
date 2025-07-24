@@ -38,6 +38,44 @@ exports.register = (req, res) => {
   });
 };
 
+exports.createUserFromAdmin = (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  if (!name || !email || !password || !role) {
+    return res
+      .status(400)
+      .json({ message: "Todos los campos son obligatorios." });
+  }
+
+  if (!/\S+@\S+\.\S+/.test(email)) {
+    return res
+      .status(400)
+      .json({ message: "Formato de correo electrónico inválido." });
+  }
+
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .json({ message: "La contraseña debe tener al menos 6 caracteres." });
+  }
+
+  UserModel.createUserWithRole(
+    req.db,
+    { name, email, password, role },
+    (err, result) => {
+      if (err) {
+        if (err.message === "El correo electrónico ya está registrado.") {
+          return res.status(409).json({ message: err.message });
+        }
+        console.error("Error al crear usuario desde admin:", err);
+        return res.status(500).json({ message: "Error interno del servidor." });
+      }
+
+      res.status(201).json({ message: "Usuario creado exitosamente." });
+    }
+  );
+};
+
 exports.login = (req, res) => {
   const { email, password } = req.body;
 
@@ -80,5 +118,60 @@ exports.login = (req, res) => {
         userRole: user.role,
       });
     });
+  });
+};
+
+exports.getAllUsers = (req, res) => {
+  UserModel.getAllUsers(req.db, (err, users) => {
+    if (err) {
+      console.error("Error al obtener usuarios:", err);
+      return res.status(500).json({ message: "Error al obtener usuarios." });
+    }
+    res.status(200).json(users);
+  });
+};
+
+exports.getUserById = (req, res) => {
+  const { id } = req.params;
+  UserModel.getUserById(req.db, id, (err, user) => {
+    if (err) {
+      console.error("Error al obtener usuario:", err);
+      return res.status(500).json({ message: "Error interno del servidor." });
+    }
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado." });
+    }
+    res.status(200).json(user);
+  });
+};
+
+exports.updateUser = (req, res) => {
+  const { id } = req.params;
+  const { name, email, role } = req.body;
+
+  if (!name || !email || !role) {
+    return res
+      .status(400)
+      .json({ message: "Todos los campos son obligatorios." });
+  }
+
+  UserModel.updateUser(req.db, id, { name, email, role }, (err, result) => {
+    if (err) {
+      console.error("Error al actualizar usuario:", err);
+      return res.status(500).json({ message: "Error al actualizar usuario." });
+    }
+    res.status(200).json({ message: "Usuario actualizado correctamente." });
+  });
+};
+
+exports.deleteUser = (req, res) => {
+  const { id } = req.params;
+
+  UserModel.deleteUser(req.db, id, (err, result) => {
+    if (err) {
+      console.error("Error al eliminar usuario:", err);
+      return res.status(500).json({ message: "Error al eliminar usuario." });
+    }
+    res.status(200).json({ message: "Usuario eliminado correctamente." });
   });
 };

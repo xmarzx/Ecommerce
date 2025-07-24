@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 .navbar {
   --gradient-primary: linear-gradient(135deg, #2944b8 0%, #6423a5 100%);
   --gradient-secondary: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
@@ -6,21 +9,21 @@
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   background: var(--gradient-primary);
-  height: 85px;
+  height: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 1000;
   box-shadow: var(--shadow);
   transition: var(--transition);
 }
 
-.navbar.scrolled {
-  height: 70px;
+/* .navbar.scrolled {
+  height: 60px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-}
+} */
 
 .navbar.menuOpen {
   background: var(--gradient-secondary);
@@ -28,16 +31,20 @@
 
 .navbarContainer {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  justify-content: flex-start;
   align-items: center;
   height: 100%;
   width: 100%;
   max-width: 1400px;
   padding: 0 2rem;
+  flex-wrap: nowrap;
   position: relative;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.navbarLogo {
+/* .navbarLogo {
   display: flex;
   align-items: center;
   text-decoration: none;
@@ -47,20 +54,57 @@
   letter-spacing: -0.5px;
   user-select: none;
   cursor: default;
-}
+} */
 
-.logoHighlight {
+/* .logoHighlight {
   background: var(--gradient-secondary);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-left: 4px;
+} */
+
+/* .navbarLogo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  user-select: none;
+  cursor: default;
+} */
+
+/* .logoFull {
+  display: block;
+  width: 150px;
+  user-select: none;
+} */
+
+.navbarLogo {
+  order: 1; /* Logo a la izquierda */
+  flex-shrink: 0; /* No se encoge */
+  max-width: 100px;
+  margin-right: 2rem; /* Espacio después del logo */
+}
+
+.logoFull {
+  display: block; /* Muestra el logo completo por defecto */
+  width: 100%; /* Ocupa el 100% de su contenedor (150px) */
+  height: auto;
+  user-select: none;
+  cursor: default;
+}
+
+.logoShort {
+  display: none;
 }
 
 .navbarMenu {
+  order: 2;
   display: flex;
   list-style: none;
   gap: 2rem;
+  flex-grow: 1;
+  justify-content: center;
+  flex-shrink: 1;
 }
 
 .navbarItem {
@@ -101,12 +145,27 @@
 }
 
 .navbarActions {
+  order: 4;
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  flex-shrink: 0;
 }
 
+/* .navbarSearch {
+  order: 3;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  padding: 0.3rem 0.3rem 0.3rem 1rem;
+  backdrop-filter: blur(5px);
+  transition: var(--transition);
+} */
+
 .navbarSearch {
+  order: 3; /* Barra de búsqueda después del menú */
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.2);
@@ -114,6 +173,9 @@
   padding: 0.3rem 0.3rem 0.3rem 1rem;
   backdrop-filter: blur(5px);
   transition: var(--transition);
+  width: 250px; /* Ancho fijo para la barra de búsqueda en desktop */
+  flex-shrink: 0; /* No se encoge si hay espacio */
+  margin-right: 1.5rem; /* Espacio entre Search y Actions */
 }
 
 .navbarSearch:focus-within {
@@ -127,7 +189,7 @@
   outline: none;
   color: #fff;
   font-size: 0.9rem;
-  width: 150px;
+  width: 100%;
   transition: var(--transition);
   padding: 0.3rem 0;
 }
@@ -155,8 +217,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Estilos para el botón de hamburguesa */
-
 .navbarToggle {
   display: none;
   cursor: pointer;
@@ -175,7 +235,6 @@
   transition: var(--transition);
 }
 
-/* Estilos para el botón de cerrar */
 .icon {
   width: 1.25rem;
   height: 1.25rem;
@@ -213,7 +272,9 @@
 
 .profileMenuItem {
   cursor: pointer;
+  color: #6b7280;
   transition: color 0.2s;
+  text-decoration: none;
 }
 
 .profileMenuItem:hover {
@@ -250,25 +311,369 @@
   transition: background-color 0.3s ease-in-out;
 }
 
-@media screen and (max-width: 1200px) {
-  .navbarContainer {
-    padding: 0 1.5rem;
+@media screen and (min-width: 993px) and (max-width: 1050px) {
+  .navbarActions {
+    /* Reducir el espacio entre los elementos de acción */
+    gap: 0.8rem; /* Originalmente 1.5rem, lo reducimos */
+  }
+
+  .navbarSearch {
+    /* Ajustar el padding y el ancho del campo de búsqueda para que ocupe menos espacio */
+    padding: 0.25rem 0.25rem 0.25rem 0.8rem;
+  }
+
+  .searchInput {
+    /* Reducir ligeramente el ancho del input de búsqueda */
+    /* width: 100px;  */
+    font-size: 0.85rem; /* Reducir el tamaño de la fuente si es necesario */
+  }
+
+  .searchBtn {
+    /* Ajustar el tamaño del botón de búsqueda */
+    width: 28px;
+    height: 28px;
+  }
+
+  .icon {
+    /* Ajustar el tamaño de los iconos (perfil, carrito) */
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .cartCount {
+    /* Ajustar el tamaño del contador del carrito */
+    width: 0.9rem;
+    height: 0.9rem;
+    font-size: 0.45rem;
+    right: -0.25rem; /* Ajustar posición para que quede centrado */
+    bottom: -0.25rem; /* Ajustar posición para que quede centrado */
   }
 }
 
 @media screen and (max-width: 992px) {
+  .navbar {
+    height: auto;
+  }
+
+  .navbarContainer {
+    flex-wrap: wrap; /* Permite que los elementos principales salten de línea */
+    justify-content: space-between; /* Distribuye Logo/Toggle a izq y Search/Actions a der */
+    padding: 0.5rem 1rem;
+    height: auto; /* Altura automática en móvil */
+  }
+
+  .navbarToggle {
+    display: flex; /* Muestra el botón de hamburguesa */
+    order: 1; /* Primera posición */
+    margin-right: 0.5rem; /* Espacio entre toggle y logo */
+  }
+
+  .navbar.menuOpen .navbarToggle {
+    display: none;
+  }
+
   .navbarMenu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 40%;
+    height: 100vh;
+    background: var(--gradient-secondary);
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Alinea ítems del menú al inicio verticalmente */
+    padding: 2rem 0;
     gap: 1.5rem;
+    transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .navbarMenu.active {
+    left: 0;
+    z-index: 1001;
+  }
+
+  .navbarItem {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbarLink {
+    display: block;
+    padding: 1rem 0;
+    font-size: 1.1rem;
+  }
+
+  .navbarLink.active::after {
+    width: 50%;
+    left: 25%;
+  }
+
+  .navbarLogo {
+    order: 2; /* Segunda posición */
+    flex-grow: 0; /* No debe crecer aquí, ya que el espacio se maneja con space-between */
+    text-align: left; /* Alinea el logo a la izquierda */
+    margin-left: 0; /* Asegura que no tenga auto margin */
+    margin-right: auto; /* Empuja los siguientes elementos a la derecha */
+    max-width: 100px; /* Limita el tamaño del logo */
+  }
+
+  .navbarSearch {
+    order: 3; /* Tercera posición */
+    margin-right: 0.8rem; /* Espacio entre Search y Actions */
+    width: auto; /* Asegura que no sea 100% y se ajuste al contenido */
+    flex-shrink: 0;
+    /* Ajustes específicos para mobile */
+    padding: 0.3rem 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    box-shadow: none;
+    margin-top: 0;
+  }
+  .searchInput {
+    width: 100px; /* Un ancho predeterminado para el input de búsqueda en móviles */
+    font-size: 0.85rem;
+  }
+  .searchBtn {
+    width: 28px;
+    height: 28px;
   }
 
   .navbarActions {
-    gap: 1rem;
+    order: 4; /* Cuarta posición */
+    gap: 0.8rem;
+    margin-left: 0; /* Ya no es auto, se pegará a search */
+    z-index: 1000;
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 530px) {
   .navbar {
-    height: 75px;
+    height: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .navbarContainer {
+    padding: 0.5rem 1rem;
+    flex-wrap: wrap; /* Permite saltos de línea */
+    justify-content: space-between; /* Mantiene space-between para la línea superior */
+  }
+
+  /* Elementos de la primera línea: Toggle (izquierda), Logo (junto al toggle), Actions (derecha) */
+  .navbarToggle {
+    order: 1; /* Primera posición a la izquierda */
+    margin-right: 0.5rem; /* Espacio con el logo */
+  }
+
+  .navbar.menuOpen .navbarToggle {
+    display: none;
+  }
+
+  .navbarLogo {
+    order: 2; /* Segunda posición, junto al toggle */
+    flex-grow: 1; /* Permite que el logo ocupe el espacio central en esta línea */
+    text-align: left; /* Alinea el logo a la izquierda dentro de su espacio */
+    margin-left: 0; /* Asegura que no haya margin-left: auto; */
+    margin-right: auto; /* Esto empuja las acciones a la derecha */
+    max-width: 80px; /* Reducir aún más el logo */
+  }
+
+  .logoMobile {
+    width: 35px; /* Reducir tamaño del logo móvil */
+  }
+
+  /* .navbarMenu {
+    display: none;
+  }
+
+  .navbarMenu.active {
+    display: flex;
+  } */
+
+  .navbarMenu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100vh;
+    background: var(--gradient-secondary);
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Alinea ítems del menú al inicio verticalmente */
+    padding: 2rem 0;
+    gap: 1.5rem;
+    transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .navbarMenu.active {
+    left: 0;
+    z-index: 1001;
+  }
+
+  .navbarActions {
+    order: 3; /* Tercera posición, a la derecha de la primera línea */
+    display: flex;
+    flex-direction: row; /* Asegura que los íconos estén en fila */
+    gap: 0.5rem; /* Reducir el gap entre iconos */
+    align-items: center;
+    flex-shrink: 0;
+    flex-basis: auto; /* Asegura que no tome más espacio del necesario */
+    margin-left: 0; /* Ya no es auto, se pegará a la derecha por justify-content */
+    /* No hay margin-top aquí, ya que está en la primera línea */
+  }
+
+  .profileGroup,
+  .cartLink {
+    flex-shrink: 0;
+  }
+
+  /* La barra de búsqueda se moverá a la segunda línea */
+  .navbarSearch {
+    display: flex;
+    order: 4; /* Cuarta posición, lo que la fuerza a la siguiente línea */
+    width: 100%; /* Ocupa todo el ancho disponible */
+    margin-top: 0.8rem; /* Espacio para el salto de línea */
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0.3rem 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    box-shadow: none;
+  }
+
+  .searchInput {
+    flex-grow: 1;
+    font-size: 0.8rem; /* Tamaño de fuente más pequeño */
+    padding: 0;
+  }
+
+  .searchBtn {
+    width: 26px; /* Botón de búsqueda más pequeño */
+    height: 26px;
+    margin-left: 0.4rem;
+  }
+
+  .icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .cartCount {
+    width: 0.8rem;
+    height: 0.8rem;
+    font-size: 0.4rem;
+    right: -0.2rem;
+    bottom: -0.2rem;
+  }
+}
+
+/* @media screen and (max-width: 530px) {
+  .navbar {
+    height: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .navbarContainer {
+    padding: 0.5rem 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navbarToggle {
+    display: flex;
+    order: 1;
+    margin-right: 0;
+  }
+
+  .navbar.menuOpen .navbarToggle {
+    display: none;
+  }
+
+  .navbarLogo {
+    order: 2;
+    flex-grow: 1;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin: 0;
+    width: auto;
+    max-width: 100px;
+  }
+
+  .logoMobile {
+    width: 40px;
+  }
+
+  .navbarMenu {
+    display: none;
+  }
+
+  .navbarMenu.active {
+    display: flex;
+  }
+
+  .navbarActions {
+    order: 3;
+    display: flex;
+    flex-direction: row;
+    gap: 0.8rem;
+    align-items: center;
+    flex-shrink: 0;
+    flex-basis: auto;
+  }
+
+  .profileGroup,
+  .cartLink {
+    flex-shrink: 0;
+  }
+
+  .navbarSearch {
+    display: flex;
+    order: 4;
+    width: 100%;
+    margin-top: 0.8rem;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0.3rem 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    box-shadow: none;
+  }
+
+  .searchInput {
+    flex-grow: 1;
+    font-size: 0.9rem;
+    padding: 0;
+  }
+
+  .searchBtn {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    margin-left: 0.5rem;
+  }
+
+  .icon {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .cartCount {
+    width: 0.9rem;
+    height: 0.9rem;
+    font-size: 0.45rem;
+  }
+} */
+
+/* @media screen and (max-width: 992px) {
+  .navbar {
+    height: auto;
   }
 
   .navbar.menuOpen {
@@ -291,11 +696,12 @@
     position: fixed;
     top: 0;
     left: -100%;
-    width: 80%;
+    width: 70%;
     height: 100vh;
     background: var(--gradient-secondary);
     flex-direction: column;
     align-items: center;
+    justify-content: start;
     padding: 2rem 0;
     gap: 1.5rem;
     transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -333,76 +739,15 @@
     margin-right: auto;
   }
 
-  .navbarActions {
+  .navbarSearch {
     order: 3;
+    margin-right: 10px;
+  }
+
+  .navbarActions {
+    order: 4;
     gap: 0.8rem;
     margin-left: auto;
     z-index: 1000;
   }
-}
-
-@media screen and (max-width: 576px) {
-  .navbarLogo {
-    font-size: 1.3rem;
-  }
-
-  .navbarActions {
-    gap: 0.6rem;
-  }
-
-  .navbarSearch {
-    width: 120px;
-  }
-
-  .searchInput {
-    width: 80px;
-    font-size: 0.75rem;
-  }
-
-  .searchBtn {
-    width: 24px;
-    height: 24px;
-  }
-
-  .icon {
-    width: 1rem;
-    height: 1rem;
-  }
-
-  .cartCount {
-    width: 0.8rem;
-    height: 0.8rem;
-    font-size: 0.4rem;
-  }
-
-  .navbarMenu {
-    width: 90%;
-  }
-
-  .navbarContainer {
-    padding: 0 1rem;
-  }
-}
-
-@media screen and (max-width: 400px) {
-  .navbarContainer {
-    padding: 0 0.8rem;
-  }
-
-  .navbarToggle {
-    margin-right: 0.8rem;
-  }
-
-  .navbarSearch {
-    width: 100px;
-  }
-
-  .searchInput {
-    width: 70px;
-    font-size: 0.7rem;
-  }
-
-  .navbarActions {
-    gap: 0.5rem;
-  }
-}
+} */

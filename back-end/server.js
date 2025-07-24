@@ -6,6 +6,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const subcategoryRoutes = require("./routes/subcategoryRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 const mysql = require("mysql");
 const cors = require("cors");
 const path = require("path");
@@ -47,6 +48,7 @@ app.use("/api", categoryRoutes);
 app.use("/api", subcategoryRoutes);
 app.use("/api", orderRoutes);
 app.use("/api", authRoutes);
+app.use("/api/users", userRoutes);
 
 app.listen(5000, () => {
   console.log("Servidor iniciado en el puerto 5000");

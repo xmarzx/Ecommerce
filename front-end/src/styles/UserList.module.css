@@ -1,0 +1,85 @@
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 25px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.table tr:hover {
+  background-color: #f0f0f0;
+}
+
+.editBtn,
+.deleteBtn {
+  padding: 8px 14px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.editBtn {
+  background-color: #3498db;
+  color: white;
+}
+
+.editBtn:hover {
+  background-color: #2980b9;
+}
+
+.deleteBtn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.deleteBtn:hover {
+  background-color: #c0392b;
+}
+
+.addBtn {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addBtn:hover {
+  background-color: #27ae60;
+}
