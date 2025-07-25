@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/AddUser.module.css";
+import Swal from "sweetalert2";
 
 function AddUser() {
   const navigate = useNavigate();
@@ -25,7 +26,24 @@ function AddUser() {
       navigate("/users");
     } catch (err) {
       console.error("Error al registrar usuario:", err);
-      alert("Hubo un error al crear el usuario.");
+      if (
+        err.response &&
+        err.response.data &&
+        err.response.data.message &&
+        err.response.data.message.toLowerCase().includes("correo")
+      ) {
+        Swal.fire({
+          icon: "error",
+          title: "Correo ya registrado",
+          text: "Por favor, utiliza otro correo electrónico.",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Hubo un error al crear el usuario.",
+        });
+      }
     }
   };
 
